@@ -9,6 +9,7 @@ public class InputManager {
     private static int nRounds;
     private static int[][] dist;
     private static int[][] opponents;
+    private static int[][][] games;
 
     public void readInput(String inputFilename){
         try {
@@ -52,10 +53,34 @@ public class InputManager {
                     }
                 }
             }
+            scanner.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + inputFilename);
             e.printStackTrace();
+        }
+        games = new int[nRounds][nTeams/2][2];
+        for(int round = 0; round < nRounds;  round++){
+            int i = 0;
+            for(int teams = 0; teams < nTeams; teams++) {
+                int opp = opponents[round][teams];
+                if (opp > 0) {
+                    games[round][i][0] = teams + 1;
+                    games[round][i][1] = opp;
+                }
+            }
+            /*for(int teams = 0; teams < nTeams; teams++) {
+                int opp = opponents[round][teams];
+                if (opp < 0) {
+                    int pos = -1;
+                    for(int j = 0; j < nTeams/2 || pos != -1; j++){
+                        if(games[round][j][0] == -opp){
+                            pos = j;
+                        }
+                    }
+                    games[round][*//*TODO positie van -opp*//*pos][1] = teams;
+                }
+            }*/
         }
     }
 
@@ -70,6 +95,14 @@ public class InputManager {
         System.out.println("opponents:");
         for (int[] ints : opponents) {
             System.out.println(Arrays.toString(ints));
+        }
+        System.out.println("games:");
+        for (int i = 0; i < nRounds; i++) {
+            System.out.print('[');
+            for(int j = 0; j < nTeams/2; j++){
+                System.out.print(Arrays.toString(games[i][j]) + ", ");
+            }
+            System.out.println(']');
         }
     }
 
