@@ -67,20 +67,9 @@ public class InputManager {
                 if (opp > 0) {
                     games[round][i][0] = teams + 1;
                     games[round][i][1] = opp;
+                    i++;
                 }
             }
-            /*for(int teams = 0; teams < nTeams; teams++) {
-                int opp = opponents[round][teams];
-                if (opp < 0) {
-                    int pos = -1;
-                    for(int j = 0; j < nTeams/2 || pos != -1; j++){
-                        if(games[round][j][0] == -opp){
-                            pos = j;
-                        }
-                    }
-                    games[round][*//*TODO positie van -opp*//*pos][1] = teams;
-                }
-            }*/
         }
     }
 
@@ -118,11 +107,11 @@ public class InputManager {
         return nRounds;
     }
 
-    public static int[][] getDist() {
-        return dist;
+    public static int getDist(int i, int j) {
+        return dist[i][j];
     }
 
-    public static int[][] getOpponents() {
-        return opponents;
-    }
+//    public static int[][] getOpponents() {
+//        return opponents;
+//    }
 }

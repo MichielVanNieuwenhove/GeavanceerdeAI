@@ -11,4 +11,8 @@ public class BranchAndBound_BFS extends Thread{
 
     }
 
+    private void branch(){
+
+    }
+
 }

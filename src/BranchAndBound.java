@@ -1,7 +1,7 @@
 public class BranchAndBound {
     int upperbound = Integer.MAX_VALUE;
 
-    void start(){
+    public void start(){
         for(int i = 0; i < InputManager.getnUmpires(); i++){
             BranchAndBound_DFS DFS = new BranchAndBound_DFS(i, this);
             DFS.start();
