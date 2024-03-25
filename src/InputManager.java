@@ -1,13 +1,14 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class InputManager {
-    public static int nTeams;
-    public static int[][] dist = new int[nTeams][nTeams];
-    public static int[][] opponents = new int[nTeams][nTeams];
+    private static int nUmpires;
+    private static int nTeams;
+    private static int nRounds;
+    private static int[][] dist;
+    private static int[][] opponents;
 
     public void readInput(String inputFilename){
         try {
@@ -19,20 +20,36 @@ public class InputManager {
 
                 if (line.contains("nTeams")){
                     nTeams = Integer.parseInt(line.split("=")[1].trim().split(";")[0]);
+                    nUmpires = nTeams/2;
+                    nRounds = 2*nTeams-2;
+                    dist  = new int[nTeams][nTeams];
+                    opponents  = new int[nRounds][nTeams];
                 }
                 else if (line.contains("dist")){
                     for (int i = 0; i < nTeams; i++) {
                         line = scanner.nextLine();
                         String[] numbers = line.replaceAll("[\\[\\]]", "").split("\\s+");
-                        for (int j = 0; j < nTeams; j++) {
-                            if (!Objects.equals(numbers[j], "")){
-                                dist[i][j] = Integer.parseInt(numbers[j]);
+                        int notEmptyCounter = 0;
+                        for (String number : numbers) {
+                            if (!number.isEmpty()) {
+                                dist[i][notEmptyCounter] = Integer.parseInt(number);
+                                notEmptyCounter++;
                             }
                         }
                     }
                 }
                 else if (line.contains("opponents")){
-
+                    for (int i = 0; i < nRounds; i++) {
+                        line = scanner.nextLine();
+                        String[] numbers = line.replaceAll("[\\[\\]]", "").split("\\s+");
+                        int notEmptyCounter = 0;
+                        for (String number : numbers) {
+                            if (!number.isEmpty()) {
+                                opponents[i][notEmptyCounter] = Integer.parseInt(number);
+                                notEmptyCounter++;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -40,8 +57,39 @@ public class InputManager {
             System.out.println("File not found: " + inputFilename);
             e.printStackTrace();
         }
+    }
 
-        //System.out.println(nTeams);
-        System.out.println(Arrays.toString(Arrays.stream(dist).toArray()));
+    public static void print(){
+        System.out.println("umpires:" + nUmpires);
+        System.out.println("teams:" + nTeams);
+        System.out.println("rounds:" + nRounds);
+        System.out.println("dist:");
+        for (int[] ints : dist) {
+            System.out.println(Arrays.toString(ints));
+        }
+        System.out.println("opponents:");
+        for (int[] ints : opponents) {
+            System.out.println(Arrays.toString(ints));
+        }
+    }
+
+    public static int getnUmpires() {
+        return nUmpires;
+    }
+
+    public static int getnTeams() {
+        return nTeams;
+    }
+
+    public static int getnRounds() {
+        return nRounds;
+    }
+
+    public static int[][] getDist() {
+        return dist;
+    }
+
+    public static int[][] getOpponents() {
+        return opponents;
     }
 }
