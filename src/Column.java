@@ -4,7 +4,7 @@ public class Column {
 
     public Column(){}
 
-    public Column(int[][] games, int distance){
+    public Column(int[][] games, int distance){//TODO distance berekenen in de constructor i.p.v. via param
         this.games = games;
         this.distance = distance;
     }

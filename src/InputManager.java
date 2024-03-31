@@ -111,6 +111,10 @@ public class InputManager {
         return dist[i][j];
     }
 
+    public static int[][][] getGames() {
+        return games;
+    }
+
 //    public static int[][] getOpponents() {
 //        return opponents;
 //    }
