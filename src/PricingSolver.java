@@ -24,7 +24,17 @@ public class PricingSolver {
         }
 
 //constraints
-        GRBLinExpr expr = new GRBLinExpr();//TODO iets met de q's   ??en overlap met andere columns??
+        GRBLinExpr[] constr1LocPerRound = new GRBLinExpr[InputManager.getnRounds()];
+        for (int r = 0; r < InputManager.getnRounds(); r++) {
+            constr1LocPerRound[r] = new GRBLinExpr();
+            int aantalTeamsToRef = 0;
+            for (int i = 0; i < InputManager.getnTeams(); i++) {
+                constr1LocPerRound[r].addTerm(1, match[i][r]);
+            }
+            model.addConstr(constr1LocPerRound[r], GRB.EQUAL, 1, "refer exactly 1 team in round" + r);
+        }
+
+        GRBLinExpr expr = new GRBLinExpr();//TODO iets met de q's
 
 
 //objective
