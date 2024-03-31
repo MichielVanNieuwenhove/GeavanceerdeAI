@@ -15,10 +15,12 @@ public class PricingSolver {
         GRBModel model = new GRBModel(env);
 
 //beslissings Var:
-        //waarde in array zal overeen komen met het hosting team voor deze match, lengte is het aantal rondes
-        GRBVar[] match =new GRBVar[InputManager.getnRounds()];//FIXME matrix (nTeams*nRounds) --> a_{ir}(s is vast)
-        for (int i = 0; i < match.length; i++) {
-            model.addVar(0, InputManager.getnTeams()/2, 0, GRB.INTEGER, "round" + i);
+        //komt overeen met a_{i, r, s} uit de paper
+        GRBVar[][] match =new GRBVar[InputManager.getnRounds()][InputManager.getnTeams()];
+        for (int i = 0; i < InputManager.getnTeams(); i++) {
+            for (int r = 0; r < InputManager.getnRounds(); r++) {
+                model.addVar(0, 1, 0, GRB.BINARY, "a_{" + i + ", " + r + "}");
+            }
         }
 
 //constraints
@@ -32,13 +34,13 @@ public class PricingSolver {
         for(int i = 0; i < InputManager.getnTeams(); i++){
             for(int r = 0; r < InputManager.getnRounds(); r++){
                 //TODO term: (int) (match[r]==i)/*airs*/ * w_ir
-                expr_obj.addTerm();
+                expr_obj.addTerm(w_ir, match[i][r]);
             }
         }
 
         model.setObjective(expr_obj, GRB.MAXIMIZE); //maximize --> >d_s
         model.update();
-        model.optimize();
+        model.optimize();//TODO enkel een oplossing i.p.v. de optimale?
 
         //TODO make column based on gurobi's output
         return column;
