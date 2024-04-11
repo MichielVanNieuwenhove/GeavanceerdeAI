@@ -1,5 +1,8 @@
 import gurobi.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PricingSolver {
     /**
      * @param umpire <p>umpire &#x2208 [0, InputManager.getnUmpires()[ --> what umpire to make a column for (wat is the start location)</p>
@@ -55,10 +58,15 @@ public class PricingSolver {
         //TODO d_s bepalen
         double d_s = 0.0;//double om te kunnen vergelijken met objective value
 
-        Column column = null;
-        if(model.getObjective(0).getValue() > d_s){
-            column = new Column(/*TODO*/);
+        //construct column based on gurobi output
+        Column column = new Column(/*TODO*/);
+        //return null if distance requirement is not met
+        if(model.getObjective(0).getValue() <= column.getDistance()){
+            column = null;
         }
+
+        model.dispose();
+        env.dispose();
         return column;
     }
 }
