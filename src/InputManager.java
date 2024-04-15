@@ -115,7 +115,7 @@ public class InputManager {
         return games;
     }
 
-    public static int getOpponent(int round, int team) {
+    public static int getOpponent(int team, int round) {
         return opponents[round][team];
     }
 }
