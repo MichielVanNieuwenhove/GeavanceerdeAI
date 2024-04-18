@@ -81,37 +81,39 @@ public class PricingSolver {
         }
 
         //TODO enkel voor home en away team voor elke ronde --> ook vanaf round 1 beginnen i.p.v. round q2
-//TODO faut in constraints --> infeasible
-//        GRBLinExpr[][] constrQ2 = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnRounds()];//q2
-//        //direct beginnen bij round q2-1 omdat deze ook rekening houdt met alle vorige rondes
-//        for (int r = max(Main.q2 - 1, 0); r < InputManager.getnRounds(); r++) {
-//            for (int i = 0; i < InputManager.getnTeams(); i++) {
-//                constrQ2[i][r] = new GRBLinExpr();
-//                //loop ook stoppen als index out of bound zou gaan (voor r)
-//                for (int q = 0; q < Main.q2 && q <= r; q++) {
-//                    constrQ2[i][r].addTerm(1, a_s[i][r-q]);
-//                    for (int I = 0; I < InputManager.getnTeams(); I++) {
-//                        constrQ2[i][r].addConstant(i + 1==-InputManager.getOpponent(I, r-q)?1:0);
-//                    }
-//                }
-//
-//                model.addConstr(constrQ2[i][r], GRB.LESS_EQUAL, 1,
-//                        "only refer team " + i + " once every " + Main.q2 + " rounds (q2)"
-//                );
-//            }
-//        }
-//
-//        GRBLinExpr[][] constrHomeOnly = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnRounds()];//only at home locations
-//        for (int i = 0; i < InputManager.getnTeams(); i++) {
-//            for (int r = Main.q2 - 1; r < InputManager.getnRounds(); r++) {
-//                constrHomeOnly[i][r] = new GRBLinExpr();
-//                constrHomeOnly[i][r].addTerm(1, a_s[i][r]);
-//                int equal = InputManager.getOpponent(i, r) > 0 ? 1 : 0;
-//                model.addConstr(constrHomeOnly[i][r], GRB.EQUAL, equal,
-//                        "only refer when game is hosted at loc " + i + " in round " + r
-//                );
-//            }
-//        }
+//FIXME faut in constraint --> infeasible
+        GRBLinExpr[][] constrQ2 = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnRounds()];//q2
+        //direct beginnen bij round q2-1 omdat deze ook rekening houdt met alle vorige rondes
+        for (int r = max(Main.q2 - 1, 0); r < InputManager.getnRounds(); r++) {
+            for (int i = 0; i < InputManager.getnTeams(); i++) {
+                constrQ2[i][r] = new GRBLinExpr();
+                //loop ook stoppen als index out of bound zou gaan (voor r)
+                for (int q = 0; q < Main.q2 && q <= r; q++) {
+                    constrQ2[i][r].addTerm(1, a_s[i][r-q]);
+                    for (int I = 0; I < InputManager.getnTeams(); I++) {
+                        //a_s[I][r-q] added --> zonder wordt het tegen team ook geteld als er hier niet gerefereerd wordt.
+                        constrQ2[i][r].addTerm(i + 1==-InputManager.getOpponent(I, r-q)?1:0, a_s[I][r-q]);
+                    }
+                }
+
+                model.addConstr(constrQ2[i][r], GRB.LESS_EQUAL, 1,
+                        "only refer team " + i + " once every " + Main.q2 + " rounds (q2)"
+                );
+            }
+        }
+
+        GRBLinExpr[][] constrHomeOnly = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnRounds()];//only at home locations
+        for (int i = 0; i < InputManager.getnTeams(); i++) {
+            for (int r = Main.q2 - 1; r < InputManager.getnRounds(); r++) {
+                constrHomeOnly[i][r] = new GRBLinExpr();
+                constrHomeOnly[i][r].addTerm(1, a_s[i][r]);
+                int equal = InputManager.getOpponent(i, r) > 0 ? 1 : 0;
+                // we hadden hier == gezet, waardoor een ump op alle thuis locaties moest zijn :(
+                model.addConstr(constrHomeOnly[i][r], GRB.LESS_EQUAL, equal,
+                        "only refer when game is hosted at loc " + i + " in round " + r
+                );
+            }
+        }
 
 
 //objective
