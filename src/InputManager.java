@@ -115,6 +115,12 @@ public class InputManager {
         return games;
     }
 
+    /**
+     *
+     * @param team index voor het team waarvan de tegenstander gezocht wordt.
+     * @param round de ronde waarin een tegenstander gezocht wordt.
+     * @return opponent nr(niet index) van de tegenstander
+     */
     public static int getOpponent(int team, int round) {
         return opponents[round][team];
     }

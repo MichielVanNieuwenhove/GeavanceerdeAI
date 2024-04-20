@@ -17,4 +17,7 @@ public class Main {
         Column c = PricingSolver.gurobi(0, 1, w);
         System.out.println(c);
     }
+    //TODO op school vragen
+    //      initiële opl
+    //      masterProblemSolver continuous or binary (beslissingsVar)
 }
