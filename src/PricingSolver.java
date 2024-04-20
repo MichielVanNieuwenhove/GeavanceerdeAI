@@ -4,14 +4,13 @@ import static java.lang.Math.max;
 
 public class PricingSolver {
     /**
-     * @param umpire <p>umpire &#x2208 [0, InputManager.getnUmpires()[ --> what umpire to make a column for (wat is the start location)</p>
+     * @param umpire <p>umpire &#x2208 [0, InputManager.getnUmpires()[ --> umpire to make a column for (wat is the start location)</p>
      *
      * @return generated column > d_s or null if no improvements
      * @throws GRBException gurobi exception
      */
     public static Column gurobi(int umpire, int v_u, int [][] w) throws GRBException {
         GRBEnv env = new GRBEnv(true);
-//        env.set("logFile", "mip1.log"); TODO needed?
         env.start();
 
         GRBModel model = new GRBModel(env);
@@ -92,7 +91,7 @@ public class PricingSolver {
                     constrQ2[i][r].addTerm(1, a_s[i][r-q]);
                     for (int I = 0; I < InputManager.getnTeams(); I++) {
                         //a_s[I][r-q] added --> zonder wordt het tegen team ook geteld als er hier niet gerefereerd wordt.
-                        constrQ2[i][r].addTerm(i + 1==-InputManager.getOpponent(I, r-q)?1:0, a_s[I][r-q]);
+                        constrQ2[i][r].addTerm(i + 1==InputManager.getOpponent(I, r-q)?1:0, a_s[I][r-q]);
                     }
                 }
 
