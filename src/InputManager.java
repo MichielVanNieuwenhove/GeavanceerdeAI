@@ -65,8 +65,8 @@ public class InputManager {
             for(int teams = 0; teams < nTeams; teams++) {
                 int opp = opponents[round][teams];
                 if (opp > 0) {
-                    games[round][i][0] = teams + 1;
-                    games[round][i][1] = opp;
+                    games[round][i][0] = teams;
+                    games[round][i][1] = opp - 1;
                     i++;
                 }
             }

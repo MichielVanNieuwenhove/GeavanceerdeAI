@@ -25,7 +25,6 @@ public class masterProblemSolver {
             lambda[u] = new ArrayList<>(columns[u].size());
             for(int s = 0; s < columns[u].size(); s++){
                 //continuous omdat we een lineare relaxatie moeten oplossen om een duale cost te bepalen
-                //TODO op school vragen
                 lambda[u].add(
                         model.addVar(0, 1, 0, GRB.CONTINUOUS,
                                 "lambda_" + u + s
@@ -80,7 +79,7 @@ public class masterProblemSolver {
         for (int u = 0; u < InputManager.getnUmpires(); u++){
             lambda_solution[u] = new ArrayList<>(columns[u].size());
             for (int s = 0; s < columns[u].size(); s++){
-                lambda_solution[u].add(lambda[u].get(s).get(GRB.DoubleAttr.X) == 1);//TODO fauten met afrondingen? (1==0.9999)
+                lambda_solution[u].add(lambda[u].get(s).get(GRB.DoubleAttr.X) == 1);//LETOP fouten met afrondingen? (1==0.9999)
             }
         }
 

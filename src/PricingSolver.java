@@ -24,10 +24,9 @@ public class PricingSolver {
             }
         }
 
-//constraints TODO  ??1ste locatie vast leggen gebaseerd op input var??
+//constraints
         GRBLinExpr constrStartLoc = new GRBLinExpr();
-        //-1 om naar index te gaan (in plaat van team nr)
-        int startTeam = InputManager.getGames()[0][umpire][0] - 1;
+        int startTeam = InputManager.getGames()[0][umpire][0];
         constrStartLoc.addTerm(1, a_s[startTeam][0]);
         model.addConstr(constrStartLoc, GRB.EQUAL, 1,
                 "Starting location"
@@ -44,7 +43,7 @@ public class PricingSolver {
             );
         }
 
-        //visit every location at least once --> constraint 4 TODO enkel door rounds gaan waar team i host?
+        //visit every location at least once --> constraint 4
         GRBLinExpr[] constrLocMinOnce = new GRBLinExpr[InputManager.getnTeams()];
         for (int i = 0; i < InputManager.getnTeams(); i++) {
             constrLocMinOnce[i] = new GRBLinExpr();
@@ -57,12 +56,6 @@ public class PricingSolver {
         }
 
 
-        //vorige Main.q - 1 teams mogen niet gelijk zijn aan 1 van de huidige teams:
-        //  a[i][r] + sum(a[i][r-q]) <= 1       LETOP!! r-q > 0 (index out of bounds)
-        //                                              bij q2 ook opletten voor awaiy teams
-        //                                              --> a[i][r] -> thuis team te vergelijken met -Inputmanager.oponents[r][i]
-
-        //TODO enkel voor home team voor elke ronde --> ook vanaf round 1 beginnen i.p.v. round q1
         GRBLinExpr[][] constrQ1 = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnRounds()];//q1
         //direct beginnen bij round q1-1 omdat deze ook rekening houdt met alle vorige rondes
         for (int r = max(Main.q1 - 1, 0); r < InputManager.getnRounds(); r++) {
@@ -79,8 +72,7 @@ public class PricingSolver {
             }
         }
 
-        //TODO enkel voor home en away team voor elke ronde --> ook vanaf round 1 beginnen i.p.v. round q2
-//FIXME faut in constraint --> infeasible
+
         GRBLinExpr[][] constrQ2 = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnRounds()];//q2
         //direct beginnen bij round q2-1 omdat deze ook rekening houdt met alle vorige rondes
         for (int r = max(Main.q2 - 1, 0); r < InputManager.getnRounds(); r++) {
@@ -117,11 +109,9 @@ public class PricingSolver {
 
 //objective
         GRBLinExpr expr_obj = new GRBLinExpr();
-        //TODO v_u (dual var)
         expr_obj.addConstant(v_u);
         for(int i = 0; i < InputManager.getnTeams(); i++){
             for(int r = 0; r < InputManager.getnRounds(); r++){
-                //TODO w_ir (dual var)
                 expr_obj.addTerm(w[i][r], a_s[i][r]);
             }
         }
@@ -130,8 +120,6 @@ public class PricingSolver {
         model.update();
         model.optimize();
 
-        //TODO d_s bepalen
-        double d_s = 0.0;//double om te kunnen vergelijken met objective value
 
         //construct column based on gurobi output
         int [][] a = new int[InputManager.getnTeams()][InputManager.getnRounds()];
