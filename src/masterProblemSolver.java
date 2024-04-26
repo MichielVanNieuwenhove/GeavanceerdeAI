@@ -6,11 +6,18 @@ import java.util.ArrayList;
 public class masterProblemSolver {
     static private final List<Column>[] columns = new List[InputManager.getnUmpires()];
 
-    public void init(){
+    public static void init() throws GRBException {
         for(int u = 0; u < InputManager.getnUmpires(); u++){
             columns[u] = new ArrayList<>();
-            //TODO generate initial columns
         }
+        Column[] c = GeneralSolution.gurobi();
+        for (int i = 0; i < c.length; i++) {
+            columns[i].add(c[i]);
+        }
+    }
+
+    public static void addColumn(Column column, int umpire){
+        columns[umpire].add(column);
     }
 
     public static MasterProblemSolution gurobi() throws GRBException {
@@ -39,7 +46,7 @@ public class masterProblemSolver {
         GRBLinExpr[] constrOneColumn = new GRBLinExpr[InputManager.getnUmpires()];
         for (int u = 0; u < InputManager.getnUmpires(); u++) {
             constrOneColumn[u] = new GRBLinExpr();
-            for (int s = 0; s < constrOneColumn.length; s++){
+            for (int s = 0; s < columns[u].size(); s++){
                 constrOneColumn[u].addTerm(1, lambda[u].get(s));
             }
             model.addConstr(constrOneColumn[u], GRB.EQUAL, 1,

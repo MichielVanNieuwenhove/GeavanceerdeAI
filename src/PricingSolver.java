@@ -9,7 +9,7 @@ public class PricingSolver {
      * @return generated column > d_s or null if no improvements
      * @throws GRBException gurobi exception
      */
-    public static Column gurobi(int umpire, int v_u, int [][] w) throws GRBException {
+    public static Column gurobi(int umpire, double v_u, double [][] w) throws GRBException {
         GRBEnv env = new GRBEnv(true);
         env.start();
 

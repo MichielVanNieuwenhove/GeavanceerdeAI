@@ -56,7 +56,6 @@ public class GeneralSolution {
         }
 
 //constr
-        //ok
         for (int i = 0; i < InputManager.getnTeams(); i++) {
             for (int j = 0; j < InputManager.getnTeams(); j++) {
                 for (int r = 0; r < InputManager.getnRounds(); r++) {
@@ -218,7 +217,6 @@ public class GeneralSolution {
             }
         }
 
-        //ok
         model.setObjective(obj, GRB.MINIMIZE);
         model.update();
         model.optimize();

@@ -9,20 +9,19 @@ public class Main {
         inputManager.readInput(inputFilename);
         InputManager.print();
 
-        Column[] initialSolution = GeneralSolution.gurobi();
-        for (int i = 0; i < InputManager.getnUmpires(); i++){
-            System.out.println(initialSolution[i].to_a_irs_string());
-        }
-
-        int [][] w  = new int[InputManager.getnTeams()][InputManager.getnRounds()];
-        for (int i = 0; i < InputManager.getnTeams(); i++){
-            for (int r = 0; r < InputManager.getnRounds(); r++){
-                w[i][r] = 1;
+        masterProblemSolver.init();
+        int numNewColumns = 1;
+        while (numNewColumns > 0){
+            MasterProblemSolution sol = masterProblemSolver.gurobi();
+            numNewColumns = 0;
+            for (int u = 0; u < InputManager.getnUmpires(); u++) {
+                Column c = PricingSolver.gurobi(u, sol.getV()[u], sol.getW());
+                if(c != null) {
+                    masterProblemSolver.addColumn(c, u);
+                    numNewColumns++;
+                }
             }
         }
-        Column c = PricingSolver.gurobi(0, 1, w);
-        System.out.println(c);
+        //TODO integer oplossen
     }
-
-    //fixes aangeduid met 'ok' (allemaal in GeneralSolution)
 }
