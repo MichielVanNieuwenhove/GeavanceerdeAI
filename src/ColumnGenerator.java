@@ -2,17 +2,18 @@ import gurobi.*;
 
 import static java.lang.Math.max;
 
-public class PricingSolver {
+public class ColumnGenerator {
     /**
      * @param umpire <p>umpire &#x2208 [0, InputManager.getnUmpires()[ --> umpire to make a column for (wat is the start location)</p>
      *
      * @return generated column > d_s or null if no improvements
      * @throws GRBException gurobi exception
      */
+    //FIXME er is ergens een constraint te sterk, we komen minder dan optimaal uit
     public static Column gurobi(int umpire, double v_u, double [][] w) throws GRBException {
         GRBEnv env = new GRBEnv(true);
         env.start();
-
+        env.set("LogToConsole", "0");
         GRBModel model = new GRBModel(env);
 
 //beslissings Var:
@@ -99,7 +100,6 @@ public class PricingSolver {
                 constrHomeOnly[i][r] = new GRBLinExpr();
                 constrHomeOnly[i][r].addTerm(1, a_s[i][r]);
                 int equal = InputManager.getOpponent(i, r) > 0 ? 1 : 0;
-                // we hadden hier == gezet, waardoor een ump op alle thuis locaties moest zijn :(
                 model.addConstr(constrHomeOnly[i][r], GRB.LESS_EQUAL, equal,
                         "only refer when game is hosted at loc " + i + " in round " + r
                 );

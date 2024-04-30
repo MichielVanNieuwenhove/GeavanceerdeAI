@@ -124,4 +124,9 @@ public class InputManager {
     public static int getOpponent(int team, int round) {
         return opponents[round][team];
     }
+
+    public static boolean isHost(int team, int round){
+        if (getOpponent(team, round) > 0) return true;
+        else return false;
+    }
 }

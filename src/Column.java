@@ -56,4 +56,12 @@ public class Column {
         }
         return s.toString();
     }
+
+    public String toSolutionString(){
+        int[] sol = new int[games.length];
+        for (int i = 0; i < games.length; i++){
+            sol[i] = games[i][0];
+        }
+        return Arrays.toString(sol);
+    }
 }

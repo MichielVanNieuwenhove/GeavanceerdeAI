@@ -29,6 +29,7 @@ public class GeneralSolution {
 
     public static Column[] gurobi() throws GRBException {
         GRBEnv env = new GRBEnv();
+        env.set("LogToConsole", "0");
         GRBModel model = new GRBModel(env);
         model.getEnv().set(GRB.IntParam.SolutionLimit, 1);
 
@@ -126,12 +127,12 @@ public class GeneralSolution {
         }
 
         //5:
-        GRBLinExpr[][][] constr5 = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnUmpires()][InputManager.getnRounds() - Main.q1 - 1];
+        GRBLinExpr[][][] constr5 = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnUmpires()][InputManager.getnRounds() - (Main.q1 - 2)];
         for (int i = 0; i < InputManager.getnTeams(); i++){
             for (int u = 0; u < InputManager.getnUmpires(); u++){
-                for (int r = 0; r < InputManager.getnRounds() - Main.q1 - 1; r++){
+                for (int r = 0; r < InputManager.getnRounds() - (Main.q1 - 1); r++){
                     constr5[i][u][r] = new GRBLinExpr();
-                    for (int c = r; c < r + Main.q1 - 1; c++) {
+                    for (int c = r; c < r + Main.q1/* - 1*/; c++) {
                         List<Integer> delta = List.of(delta(i));
                         if(delta.contains(c)) {
                             for (int j = 0; j < InputManager.getnTeams(); j++) {
@@ -148,14 +149,14 @@ public class GeneralSolution {
 
 
         //6:
-        GRBLinExpr[][][] constr6 = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnUmpires()][InputManager.getnRounds() - Main.q2 - 1];
+        GRBLinExpr[][][] constr6 = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnUmpires()][InputManager.getnRounds() - (Main.q2 - 1)];
         for (int i = 0; i < InputManager.getnTeams(); i++){
             for (int u = 0; u < InputManager.getnUmpires(); u++){
-                for (int r = 0; r < InputManager.getnRounds() - Main.q2 - 1; r++){
+                for (int r = 0; r < InputManager.getnRounds() - (Main.q2 - 1); r++){
                     constr6[i][u][r] = new GRBLinExpr();
-                    for (int c = r; c < r + Main.q2 - 1; c++) {
+                    for (int c = r; c < r + Main.q2/* - 1*/; c++) {
                         for (int j = 0; j < InputManager.getnTeams(); j++){
-                            constr6[i][u][r].addTerm(1, x_f[i][j][r][u]);
+                            constr6[i][u][r].addTerm(1, x_f[i][j][c][u]);
                             for (int k = 0; k < InputManager.getnTeams(); k++){
                                 if (Math.abs(InputManager.getOpponent(k, c))-1 == i){
                                     constr6[i][u][r].addTerm(1, x_f[k][j][c][u]);
@@ -234,6 +235,7 @@ public class GeneralSolution {
                 }
             }
             columns[u] = new Column(a_s);
+            System.out.println("column[" + u + "]:\n" + columns[u]);
         }
 
         model.dispose();
