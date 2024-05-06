@@ -3,7 +3,7 @@ import gurobi.*;
 import java.util.List;
 import java.util.ArrayList;
 
-public class masterProblemSolver {
+public class MasterProblemSolver {
     static private final List<Column>[] columns = new List[InputManager.getnUmpires()];
 
     public static void init() throws GRBException {
@@ -95,16 +95,15 @@ public class masterProblemSolver {
 
         double[] v = new double[InputManager.getnUmpires()];
         double[][]w = new double[InputManager.getnTeams()][InputManager.getnRounds()];
-        double[] duals = model.get(GRB.DoubleAttr.Pi, model.getConstrs());
         GRBConstr[] constr = model.getConstrs();
-        for (int dual = 0; dual < duals.length; dual++){
-            String constrName = constr[dual].get(GRB.StringAttr.ConstrName);
+        for (GRBConstr grbConstr : constr) {
+            String constrName = grbConstr.get(GRB.StringAttr.ConstrName);
             String[] constrParts = constrName.split(" ");
-            if(constrParts[0].equals("v")){
-                v[Integer.parseInt(constrParts[1])] = duals[dual];
+            if (constrParts[0].equals("v")) {
+                v[Integer.parseInt(constrParts[1])] = grbConstr.get(GRB.DoubleAttr.Pi);
             }
-            if(constrParts[0].equals("w")){
-                w[Integer.parseInt(constrParts[1])][Integer.parseInt(constrParts[2])] = duals[dual];
+            if (constrParts[0].equals("w")) {
+                w[Integer.parseInt(constrParts[1])][Integer.parseInt(constrParts[2])] = grbConstr.get(GRB.DoubleAttr.Pi);
             }
 
         }
@@ -188,21 +187,6 @@ public class masterProblemSolver {
         }
 
 
-//        double[] v = new double[InputManager.getnUmpires()];
-//        double[][]w = new double[InputManager.getnTeams()][InputManager.getnRounds()];
-//        double[] duals = model.get(GRB.DoubleAttr.Pi, model.getConstrs());
-//        GRBConstr[] constr = model.getConstrs();
-//        for (int dual = 0; dual < duals.length; dual++){
-//            String constrName = constr[dual].get(GRB.StringAttr.ConstrName);
-//            String[] constrParts = constrName.split(" ");
-//            if(constrParts[0].equals("v")){
-//                v[Integer.parseInt(constrParts[1])] = duals[dual];
-//            }
-//            if(constrParts[0].equals("w")){
-//                w[Integer.parseInt(constrParts[1])][Integer.parseInt(constrParts[2])] = duals[dual];
-//            }
-//
-//        }
         Column[] chosen = new Column[InputManager.getnUmpires()];
         for (int u = 0; u < InputManager.getnUmpires(); u++){
             for (int s = 0; s < columns[u].size(); s++){

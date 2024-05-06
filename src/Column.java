@@ -60,7 +60,7 @@ public class Column {
     public String toSolutionString(){
         int[] sol = new int[games.length];
         for (int i = 0; i < games.length; i++){
-            sol[i] = games[i][0];
+            sol[i] = games[i][0] + 1;
         }
         return Arrays.toString(sol);
     }

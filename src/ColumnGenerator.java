@@ -83,7 +83,6 @@ public class ColumnGenerator {
                 for (int q = 0; q < Main.q2 && q <= r; q++) {
                     constrQ2[i][r].addTerm(1, a_s[i][r-q]);
                     for (int I = 0; I < InputManager.getnTeams(); I++) {
-                        //a_s[I][r-q] added --> zonder wordt het tegen team ook geteld als er hier niet gerefereerd wordt.
                         constrQ2[i][r].addTerm(i + 1==InputManager.getOpponent(I, r-q)?1:0, a_s[I][r-q]);
                     }
                 }
@@ -99,8 +98,8 @@ public class ColumnGenerator {
             for (int r = Main.q2 - 1; r < InputManager.getnRounds(); r++) {
                 constrHomeOnly[i][r] = new GRBLinExpr();
                 constrHomeOnly[i][r].addTerm(1, a_s[i][r]);
-                int equal = InputManager.getOpponent(i, r) > 0 ? 1 : 0;
-                model.addConstr(constrHomeOnly[i][r], GRB.LESS_EQUAL, equal,
+                int hosting = InputManager.getOpponent(i, r) > 0 ? 1 : 0;
+                model.addConstr(constrHomeOnly[i][r], GRB.LESS_EQUAL, hosting,
                         "only refer when game is hosted at loc " + i + " in round " + r
                 );
             }
@@ -130,7 +129,7 @@ public class ColumnGenerator {
         }
         Column column = new Column(a);
         //return null if distance requirement is not met
-        if(model.get(GRB.DoubleAttr.ObjBound) <= column.getDistance()){
+        if(model.get(GRB.DoubleAttr.ObjBound) <= column.getDistance() - 500){
             column = null;
         }
 
