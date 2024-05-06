@@ -23,7 +23,7 @@ public class MasterProblemSolver {
     public static MasterProblemSolution gurobi() throws GRBException {
         GRBEnv env = new GRBEnv(true);
         env.start();
-        env.set("LogToConsole", "0");
+//        env.set("LogToConsole", "0");
         GRBModel model = new GRBModel(env);
 
 //beslissings Var:
@@ -33,7 +33,7 @@ public class MasterProblemSolver {
             for(int s = 0; s < columns[u].size(); s++){
                 //continuous omdat we een lineare relaxatie moeten oplossen om een duale cost te bepalen
                 lambda[u].add(
-                        model.addVar(0, 1, 0, GRB.CONTINUOUS,
+                        model.addVar(0, 1, 0, GRB.BINARY,
                                 "lambda_" + u + s
                         )
                 );
@@ -82,15 +82,17 @@ public class MasterProblemSolver {
         }
         model.setObjective(expr_obj, GRB.MINIMIZE);
         model.update();
+        model = model.relax();
         model.optimize();
 
-        List<Boolean>[] lambda_solution = new List[InputManager.getnUmpires()];
-        for (int u = 0; u < InputManager.getnUmpires(); u++){
-            lambda_solution[u] = new ArrayList<>(columns[u].size());
-            for (int s = 0; s < columns[u].size(); s++){
-                lambda_solution[u].add(lambda[u].get(s).get(GRB.DoubleAttr.X) == 1);
-            }
-        }
+//        List<Boolean>[] lambda_solution = new List[InputManager.getnUmpires()];
+//        for (int u = 0; u < InputManager.getnUmpires(); u++){
+//            lambda_solution[u] = new ArrayList<>(columns[u].size());
+//            for (int s = 0; s < columns[u].size(); s++){
+//                GRBExpr obj = model.getObjective();
+//                lambda_solution[u].add(lambda[u].get(s).get(GRB.DoubleAttr.X) > 0.5);
+//            }
+//        }
 
 
         double[] v = new double[InputManager.getnUmpires()];
@@ -107,17 +109,17 @@ public class MasterProblemSolver {
             }
 
         }
-
+        System.out.println("lin: " + model.get(GRB.DoubleAttr.ObjBound));
 
         model.dispose();
         env.dispose();
-        return new MasterProblemSolution(lambda_solution, v, w);
+        return new MasterProblemSolution(/*lambda_solution*/null, v, w);
     }
 
     public static Column[] gurobiInt() throws GRBException {
         GRBEnv env = new GRBEnv(true);
         env.start();
-        env.set("LogToConsole", "0");
+//        env.set("LogToConsole", "0");
         GRBModel model = new GRBModel(env);
 
 //beslissings Var:
@@ -195,6 +197,7 @@ public class MasterProblemSolver {
                 }
             }
         }
+        System.out.println("int: " + model.get(GRB.DoubleAttr.ObjBound));
 
 
         model.dispose();

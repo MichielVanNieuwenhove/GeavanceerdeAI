@@ -129,7 +129,7 @@ public class ColumnGenerator {
         }
         Column column = new Column(a);
         //return null if distance requirement is not met
-        if(model.get(GRB.DoubleAttr.ObjBound) <= column.getDistance() - 500){
+        if(model.get(GRB.DoubleAttr.ObjBound) <= column.getDistance()){
             column = null;
         }
 
