@@ -9,7 +9,6 @@ public class ColumnGenerator {
      * @return generated column > d_s or null if no improvements
      * @throws GRBException gurobi exception
      */
-    //FIXME er is ergens een constraint te sterk, we komen minder dan optimaal uit
     public static Column gurobi(int umpire, double v_u, double [][] w) throws GRBException {
         GRBEnv env = new GRBEnv(true);
         env.start();
@@ -25,7 +24,20 @@ public class ColumnGenerator {
             }
         }
 
+        GRBVar distance;
+        distance = model.addVar(0, Integer.MAX_VALUE, 0, GRB.INTEGER, "distance");
+
 //constraints
+        GRBQuadExpr distLink = new GRBQuadExpr();
+        for (int r = 1; r < InputManager.getnRounds(); r++) {
+            for (int i = 0; i < InputManager.getnTeams(); i++) {
+                for (int j = 0; j < InputManager.getnTeams(); j++) {
+                    distLink.addTerm(InputManager.getDist(i, j), a_s[i][r], a_s[j][r - 1]);
+                }
+            }
+        }
+        model.addQConstr(distLink, GRB.EQUAL, distance, "distance linking");
+
         GRBLinExpr constrStartLoc = new GRBLinExpr();
         int startTeam = InputManager.getGames()[0][umpire][0];
         constrStartLoc.addTerm(1, a_s[startTeam][0]);
@@ -114,22 +126,22 @@ public class ColumnGenerator {
                 expr_obj.addTerm(w[i][r], a_s[i][r]);
             }
         }
+        expr_obj.addTerm(-1, distance);
 
         model.setObjective(expr_obj, GRB.MAXIMIZE); //maximize --> obj > d_s
         model.update();
         model.optimize();
 
-
         //construct column based on gurobi output
         int [][] a = new int[InputManager.getnTeams()][InputManager.getnRounds()];
         for (int i = 0; i < InputManager.getnTeams(); i++) {
             for (int r = 0; r < InputManager.getnRounds(); r++) {
-                a[i][r] = (int) a_s[i][r].get(GRB.DoubleAttr.X);
+                a[i][r] =  a_s[i][r].get(GRB.DoubleAttr.X) < 0.8 ? 0 : 1;
             }
         }
         Column column = new Column(a);
         //return null if distance requirement is not met
-        if(model.get(GRB.DoubleAttr.ObjBound) <= column.getDistance()){
+        if(model.get(GRB.DoubleAttr.ObjBound) <= 0){
             column = null;
         }
 

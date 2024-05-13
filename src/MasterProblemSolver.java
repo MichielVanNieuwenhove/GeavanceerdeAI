@@ -13,6 +13,7 @@ public class MasterProblemSolver {
         Column[] c = GeneralSolution.gurobi();
         for (int i = 0; i < c.length; i++) {
             columns[i].add(c[i]);
+//            System.out.println(columns[i].get(0).toSolutionString());
         }
     }
 
@@ -109,7 +110,7 @@ public class MasterProblemSolver {
             }
 
         }
-        System.out.println("lin: " + model.get(GRB.DoubleAttr.ObjBound));
+//        System.out.println("lin: " + model.get(GRB.DoubleAttr.ObjBound));
 
         model.dispose();
         env.dispose();
@@ -119,8 +120,13 @@ public class MasterProblemSolver {
     public static Column[] gurobiInt() throws GRBException {
         GRBEnv env = new GRBEnv(true);
         env.start();
-//        env.set("LogToConsole", "0");
+        env.set("LogToConsole", "0");
         GRBModel model = new GRBModel(env);
+//        for (int u = 0; u < InputManager.getnUmpires(); u++) {
+//            for (Column column : columns[u]) {
+//                System.out.println(column.toSolutionString());
+//            }
+//        }
 
 //beslissings Var:
         List<GRBVar>[] lambda = new List[InputManager.getnUmpires()];
