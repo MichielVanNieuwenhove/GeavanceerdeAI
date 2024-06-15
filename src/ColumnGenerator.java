@@ -1,5 +1,9 @@
 import gurobi.*;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import static java.lang.Math.max;
 
 public class ColumnGenerator {
@@ -149,4 +153,25 @@ public class ColumnGenerator {
         env.dispose();
         return column;
     }
+
+
+//    public static Column BAndB(int umpire, double v_u, double [][] w){
+//        ReadWriteLock lock = new ReentrantReadWriteLock();
+//        SharedDataElement data = new SharedDataElement();
+//        ColumnGeneratorBFS BFS = new ColumnGeneratorBFS(data, lock, umpire, v_u, w);
+//        ColumnGeneratorDFS DFS = new ColumnGeneratorDFS(data, lock, umpire, v_u, w);
+//        DFS.start();
+//        BFS.start();
+//
+//        try {
+//            DFS.join();
+//            BFS.join();
+//        }
+//        catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Column col = BFS.getSol();
+//        return col;
+//    }
 }
