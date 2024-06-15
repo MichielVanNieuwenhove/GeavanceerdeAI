@@ -1,8 +1,8 @@
 import gurobi.*;
 public class Main {
-    private final static String inputFilename = "Instances/umps4.txt";
-    public static final int q1 = 2;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
-    public static final int q2 = 1;  //An umpire crew must wait q2-1 rounds before officiating the same team again {0-floor(nUmpires/2)}
+    private final static String inputFilename = "Instances/umps10C.txt";
+    public static final int q1 = 5;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
+    public static final int q2 = 2;  //An umpire crew must wait q2-1 rounds before officiating the same team again {0-floor(nUmpires/2)}
 
     public static void main(String[] args) throws GRBException {
         InputManager inputManager = new InputManager();
@@ -25,7 +25,7 @@ public class Main {
                 }
             }
         }
-//        Column[] finalSolution = MasterProblemSolver.gurobiInt();
+        Column[] finalSolution = MasterProblemSolver.gurobiInt();
         System.out.println("run time: " + (System.currentTimeMillis() - startTime) + "ms");
         System.out.println("run time after initial solution: " + (System.currentTimeMillis() - startTime2) + "ms");
 //        int distance = 0;

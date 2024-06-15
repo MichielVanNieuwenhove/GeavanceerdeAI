@@ -1,2 +1,4 @@
 LB: 85 712.09463 --> 85 713
-time: 4 413 294 ms --> 1u 13min
+UB: 94 173
+time: 4 654 080 ms --> 1u 17min
+time zonder initiele opl.: 4 646 963 ms
