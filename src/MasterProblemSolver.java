@@ -21,7 +21,13 @@ public class MasterProblemSolver {
         columns[umpire].add(column);
     }
 
-    public static MasterProblemSolution gurobi() throws GRBException {
+    /**
+     *
+     * @param columnsToFix: a list of int[3]: [umpireNr, columnNr, 0 of 1]
+     * @return MasterProblemSolution
+     * @throws GRBException
+     */
+    public static MasterProblemSolution gurobi(FixedColumnTreeNode columnsToFix) throws GRBException {
         GRBEnv env = new GRBEnv(true);
         env.start();
 //        env.set("LogToConsole", "0");
@@ -73,6 +79,17 @@ public class MasterProblemSolver {
             }
         }
 
+        //vaste columns:
+        while (columnsToFix != null) {
+            int[] toFix = columnsToFix.getFixedColumn();
+            GRBLinExpr expr = new GRBLinExpr();
+            expr.addTerm(1, lambda[toFix[0]].get(toFix[1]));
+            model.addConstr(expr, GRB.EQUAL, toFix[2],
+                    "fixed column" + toFix[1] + "for umpire" + toFix[0] + "to" + toFix[2]
+            );
+            columnsToFix = columnsToFix.getPrevious();
+        }
+
 
 //Objective:
         GRBLinExpr expr_obj = new GRBLinExpr();
@@ -86,14 +103,14 @@ public class MasterProblemSolver {
         model = model.relax();
         model.optimize();
 
-//        List<Boolean>[] lambda_solution = new List[InputManager.getnUmpires()];
-//        for (int u = 0; u < InputManager.getnUmpires(); u++){
-//            lambda_solution[u] = new ArrayList<>(columns[u].size());
-//            for (int s = 0; s < columns[u].size(); s++){
-//                GRBExpr obj = model.getObjective();
-//                lambda_solution[u].add(lambda[u].get(s).get(GRB.DoubleAttr.X) > 0.5);
-//            }
-//        }
+        List<Double>[] lambda_solution = new List[InputManager.getnUmpires()];
+        for (int u = 0; u < InputManager.getnUmpires(); u++){
+            lambda_solution[u] = new ArrayList<>(columns[u].size());
+            for (int s = 0; s < columns[u].size(); s++){
+                GRBExpr obj = model.getObjective();
+                lambda_solution[u].add(lambda[u].get(s).get(GRB.DoubleAttr.X));
+            }
+        }
 
 
         double[] v = new double[InputManager.getnUmpires()];
@@ -110,11 +127,12 @@ public class MasterProblemSolver {
             }
 
         }
+        double sol = model.get(GRB.DoubleAttr.X);
 //        System.out.println("lin: " + model.get(GRB.DoubleAttr.ObjBound));
 
         model.dispose();
         env.dispose();
-        return new MasterProblemSolution(/*lambda_solution*/null, v, w);
+        return new MasterProblemSolution(lambda_solution/*null*/, v, w, sol);
     }
 
     public static Column[] gurobiInt() throws GRBException {

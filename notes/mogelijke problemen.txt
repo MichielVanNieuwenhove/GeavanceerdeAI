@@ -1,0 +1,1 @@
+list van columns zou kunnen te groot worden omdat deze columns niet worden verwijdert bij het terug keren in de branch tree
