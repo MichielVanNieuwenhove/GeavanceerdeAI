@@ -6,6 +6,7 @@ public class Column {
     private final int [][] a_s;
     private final int distance;
 
+//    public Column(int[][] games, boolean onderscheiding) {}
     public Column(int[][] a_s){
         this.a_s = a_s;
         games = new int[InputManager.getnRounds()][2];

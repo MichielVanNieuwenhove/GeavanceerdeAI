@@ -1,5 +1,7 @@
 import gurobi.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -155,23 +157,23 @@ public class ColumnGenerator {
     }
 
 
-//    public static Column BAndB(int umpire, double v_u, double [][] w){
-//        ReadWriteLock lock = new ReentrantReadWriteLock();
-//        SharedDataElement data = new SharedDataElement();
-//        ColumnGeneratorBFS BFS = new ColumnGeneratorBFS(data, lock, umpire, v_u, w);
-//        ColumnGeneratorDFS DFS = new ColumnGeneratorDFS(data, lock, umpire, v_u, w);
-//        DFS.start();
-//        BFS.start();
-//
-//        try {
-//            DFS.join();
-//            BFS.join();
+    public static Column BAndB(int umpire, double v_u, double [][] w) {
+        ColumnGenNode rootNode = new ColumnGenNode(umpire, v_u, w, 0);
+        ColumnGeneratorDFS dfs = new ColumnGeneratorDFS(v_u, w);
+        return dfs.DFS(rootNode, 0);
+    }
+
+//    public static Column DFS(ColumnGenNode node, int depth, double v_u, double [][] w) {
+//        //TODO
+//        //  maak alle mogelijk child nodes
+//        List<ColumnGenNode> childNodes = new ArrayList<>(InputManager.getnTeams()/2);
+//        for (int game = 0; game < InputManager.getnTeams()/2; game++) {
+//            //TODO eerst checken of dit 'mag'
+//            childNodes.add(new ColumnGenNode(node, InputManager.getGames()[depth][game], w));
 //        }
-//        catch (InterruptedException e) {
-//            e.printStackTrace();
+//        for (ColumnGenNode childNode: childNodes) {
+//            DFS(childNode, depth + 1);
 //        }
-//
-//        Column col = BFS.getSol();
-//        return col;
+//        return null;//TODO
 //    }
 }
