@@ -40,7 +40,7 @@ public class MasterProblemSolver {
             for(int s = 0; s < columns[u].size(); s++){
                 //continuous omdat we een lineare relaxatie moeten oplossen om een duale cost te bepalen
                 lambda[u].add(
-                        model.addVar(0, 1, 0, GRB.BINARY,
+                        model.addVar(0, 1, 0, GRB.CONTINUOUS,
                                 "lambda_" + u + s
                         )
                 );
@@ -100,15 +100,15 @@ public class MasterProblemSolver {
         }
         model.setObjective(expr_obj, GRB.MINIMIZE);
         model.update();
-        model = model.relax();
+//        model = model.relax();
         model.optimize();
 
         List<Double>[] lambda_solution = new List[InputManager.getnUmpires()];
         for (int u = 0; u < InputManager.getnUmpires(); u++){
             lambda_solution[u] = new ArrayList<>(columns[u].size());
             for (int s = 0; s < columns[u].size(); s++){
-                GRBExpr obj = model.getObjective();
-                lambda_solution[u].add(lambda[u].get(s).get(GRB.DoubleAttr.X));
+                GRBVar lambda_us = lambda[u].get(s);
+                lambda_solution[u].add(lambda_us.get(GRB.DoubleAttr.X));
             }
         }
 
@@ -127,7 +127,7 @@ public class MasterProblemSolver {
             }
 
         }
-        double sol = model.get(GRB.DoubleAttr.X);
+        double sol = model.get(GRB.DoubleAttr.ObjBound);
 //        System.out.println("lin: " + model.get(GRB.DoubleAttr.ObjBound));
 
         model.dispose();
