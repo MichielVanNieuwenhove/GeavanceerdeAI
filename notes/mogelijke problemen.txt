@@ -1,1 +1,6 @@
 list van columns zou kunnen te groot worden omdat deze columns niet worden verwijdert bij het terug keren in de branch tree
+
+
+branch op x_ijru:
+    - lastig om als contraint toe te voegen
+    - hoe selecteer je een goede ronde om vast te zetten
