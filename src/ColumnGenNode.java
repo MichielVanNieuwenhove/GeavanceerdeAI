@@ -1,8 +1,8 @@
 public class ColumnGenNode {
-    ColumnGenNode previous;
-    int[] game;
-    double costReductionCumul;
-    int distanceCumul;
+    private final ColumnGenNode previous;
+    private final int[] game;
+    private final double costReductionCumul;
+    private final int distanceCumul;
 // cost: v_u + w[i][r] * a_s[i][r] - distance   --> maximize
     public ColumnGenNode(ColumnGenNode prev, int[] game, double costIncrease) {
         this.previous = prev;
@@ -16,5 +16,21 @@ public class ColumnGenNode {
         this.game = InputManager.getGames()[0][umpireId];
         costReductionCumul = v_u + w[game[0]][depth];
         distanceCumul = 0;
+    }
+
+    public ColumnGenNode getPrevious() {
+        return previous;
+    }
+
+    public int[] getGame() {
+        return game;
+    }
+
+    public double getCostReductionCumul() {
+        return costReductionCumul;
+    }
+
+    public int getDistanceCumul() {
+        return distanceCumul;
     }
 }

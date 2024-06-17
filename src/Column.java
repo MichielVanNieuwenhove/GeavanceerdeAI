@@ -6,7 +6,20 @@ public class Column {
     private final int [][] a_s;
     private final int distance;
 
-//    public Column(int[][] games, boolean onderscheiding) {}
+    /**
+     *
+     * @param games the games visited by umpire (in correct order)
+     * @param onderscheiding extra param used to differentiate between
+     */
+    public Column(int[][] games, boolean onderscheiding) {
+        this.games = games;
+        a_s = new int[InputManager.getnTeams()][InputManager.getnRounds()];
+        for (int r = 0; r < InputManager.getnRounds(); r++) {
+            a_s[games[r][0]][r] = 1;
+        }
+        distance = calculateDistance();
+    }
+
     public Column(int[][] a_s){
         this.a_s = a_s;
         games = new int[InputManager.getnRounds()][2];
@@ -18,11 +31,15 @@ public class Column {
             games[round][0] = team;
             games[round][1] = InputManager.getOpponent(team, round) - 1;
         }
+        distance = calculateDistance();
+    }
+
+    private int calculateDistance(){
         int tmpDistance = 0;
         for (int round = 1; round < games.length; round++) {
             tmpDistance += InputManager.getDist(games[round - 1][0], games[round][0]);
         }
-        distance = tmpDistance;
+        return tmpDistance;
     }
 
     //getters & setters

@@ -160,20 +160,7 @@ public class ColumnGenerator {
     public static Column BAndB(int umpire, double v_u, double [][] w) {
         ColumnGenNode rootNode = new ColumnGenNode(umpire, v_u, w, 0);
         ColumnGeneratorDFS dfs = new ColumnGeneratorDFS(v_u, w);
-        return dfs.DFS(rootNode, 0);
+        dfs.DFS(rootNode, 0);
+        return dfs.getSolution();
     }
-
-//    public static Column DFS(ColumnGenNode node, int depth, double v_u, double [][] w) {
-//        //TODO
-//        //  maak alle mogelijk child nodes
-//        List<ColumnGenNode> childNodes = new ArrayList<>(InputManager.getnTeams()/2);
-//        for (int game = 0; game < InputManager.getnTeams()/2; game++) {
-//            //TODO eerst checken of dit 'mag'
-//            childNodes.add(new ColumnGenNode(node, InputManager.getGames()[depth][game], w));
-//        }
-//        for (ColumnGenNode childNode: childNodes) {
-//            DFS(childNode, depth + 1);
-//        }
-//        return null;//TODO
-//    }
 }
