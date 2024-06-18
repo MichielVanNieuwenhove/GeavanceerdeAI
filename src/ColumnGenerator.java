@@ -113,7 +113,7 @@ public class ColumnGenerator {
 
         GRBLinExpr[][] constrHomeOnly = new GRBLinExpr[InputManager.getnTeams()][InputManager.getnRounds()];//only at home locations
         for (int i = 0; i < InputManager.getnTeams(); i++) {
-            for (int r = Main.q2 - 1; r < InputManager.getnRounds(); r++) {
+            for (int r = Main.q2 - 1; r < InputManager.getnRounds(); r++) {//FIXME r = Main.q2 - 1???? --> 0
                 constrHomeOnly[i][r] = new GRBLinExpr();
                 constrHomeOnly[i][r].addTerm(1, a_s[i][r]);
                 int hosting = InputManager.getOpponent(i, r) > 0 ? 1 : 0;

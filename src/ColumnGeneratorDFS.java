@@ -42,7 +42,12 @@ public class ColumnGeneratorDFS {
 
     public void DFS(ColumnGenNode node, int round) {
         if (node == null) return;
-        //TODO bounding     best distance kan uit bestSolution gehaalt worden   shortest distance uit InputManager.getShortestDistance()
+        //bounding
+        if (bestSolution != null &&
+            node.getDistanceCumul() + InputManager.getShortestDistance()*(InputManager.getnRounds() - round) > bestSolution.getDistance()
+        ) {
+            return;
+        }
         List<ColumnGenNode> childNodes = new ArrayList<>(InputManager.getnTeams()/2);
         if (round + 1 < InputManager.getnRounds()) {
             for (int gameNr = 0; gameNr < InputManager.getnTeams() / 2; gameNr++) {

@@ -11,6 +11,8 @@ public class InputManager {
     private static int[][] opponents;
     private static int[][][] games;
 
+    private static int shortestDistance = Integer.MAX_VALUE;
+
     public void readInput(String inputFilename){
         try {
             File file = new File(inputFilename);
@@ -34,6 +36,9 @@ public class InputManager {
                         for (String number : numbers) {
                             if (!number.isEmpty()) {
                                 dist[i][notEmptyCounter] = Integer.parseInt(number);
+                                if(dist[i][notEmptyCounter] != 0) {
+                                    shortestDistance = Math.min(shortestDistance, dist[i][notEmptyCounter]);
+                                }
                                 notEmptyCounter++;
                             }
                         }
@@ -128,5 +133,9 @@ public class InputManager {
     public static boolean isHost(int team, int round){
         if (getOpponent(team, round) > 0) return true;
         else return false;
+    }
+
+    public static int getShortestDistance() {
+        return shortestDistance;
     }
 }
