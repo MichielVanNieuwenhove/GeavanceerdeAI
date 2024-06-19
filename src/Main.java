@@ -3,8 +3,8 @@ import gurobi.*;
 import java.util.List;
 
 public class Main {
-    private final static String inputFilename = "Instances/umps8C.txt";
-    public static final int q1 = 4;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
+    private final static String inputFilename = "Instances/umps12.txt";
+    public static final int q1 = 7;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
     public static final int q2 = 2;  //An umpire crew must wait q2-1 rounds before officiating the same team again {0-floor(nUmpires/2)}
 
     public static void main(String[] args) throws GRBException {
