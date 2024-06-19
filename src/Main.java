@@ -3,11 +3,17 @@ import gurobi.*;
 import java.util.List;
 
 public class Main {
+<<<<<<< Updated upstream
     private final static String inputFilename = "Instances/umps12.txt";
     public static final int q1 = 7;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
+=======
+    private final static String inputFilename = "Instances/umps10C.txt";
+    public static final int q1 = 5;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
+>>>>>>> Stashed changes
     public static final int q2 = 2;  //An umpire crew must wait q2-1 rounds before officiating the same team again {0-floor(nUmpires/2)}
+    public static boolean multithreaded = false;
 
-    public static void main(String[] args) throws GRBException {
+    public static void main(String[] args) throws GRBException, InterruptedException {
         InputManager inputManager = new InputManager();
         inputManager.readInput(inputFilename);
         InputManager.print();
@@ -18,13 +24,34 @@ public class Main {
         long startTime2 = System.currentTimeMillis();
         int numNewColumns = 1;
         while (numNewColumns > 0){
-            MasterProblemSolution sol = MasterProblemSolver.gurobi();
-            numNewColumns = 0;
-            for (int u = 0; u < InputManager.getnUmpires(); u++) {
-                Column c = ColumnGenerator.BAndB(u, sol.getV()[u], sol.getW());
-                if(c != null) {
-                    MasterProblemSolver.addColumn(c, u);
-                    numNewColumns++;
+
+            if (multithreaded){
+                MasterProblemSolution sol = MasterProblemSolver.gurobi();
+                numNewColumns = 0;
+                ColumnGeneratorThread[] threads = new ColumnGeneratorThread[InputManager.getnUmpires()];
+                for (int u = 0; u < InputManager.getnUmpires(); u++) {
+                    threads[u] = new ColumnGeneratorThread(u, sol.getV()[u], sol.getW());
+                    threads[u].start();
+                }
+
+                for (ColumnGeneratorThread thread : threads) {
+                    thread.join();
+                    Column c = thread.getResult();
+                    if (c != null) {
+                        MasterProblemSolver.addColumn(c, thread.getUmpireIndex());
+                        numNewColumns++;
+                    }
+                }
+            }
+            else{
+                MasterProblemSolution sol = MasterProblemSolver.gurobi();
+                numNewColumns = 0;
+                for (int u = 0; u < InputManager.getnUmpires(); u++) {
+                    Column c = ColumnGenerator.BAndB(u, sol.getV()[u], sol.getW());
+                    if(c != null) {
+                        MasterProblemSolver.addColumn(c, u);
+                        numNewColumns++;
+                    }
                 }
             }
         }

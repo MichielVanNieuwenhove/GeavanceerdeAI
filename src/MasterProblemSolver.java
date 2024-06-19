@@ -17,7 +17,7 @@ public class MasterProblemSolver {
         }
     }
 
-    public static void addColumn(Column column, int umpire){
+    public static synchronized void addColumn(Column column, int umpire){
         columns[umpire].add(column);
     }
 
