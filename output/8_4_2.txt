@@ -1,0 +1,4 @@
+LB: 34 304
+UB: 34 311
+time: inf ms --> 1 474 ms
+time zonder initiele opl.: inf ms --> 991 ms

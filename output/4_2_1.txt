@@ -1,4 +1,4 @@
 LB: 5176
 UB: 5176
-time: 100 ms
-time zonder initiele opl.: 44 ms
+time: 100 ms --> 102 ms
+time zonder initiele opl.: 54 ms --> 39 ms

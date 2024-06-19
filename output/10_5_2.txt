@@ -1,0 +1,4 @@
+LB: 48 876.16667
+UB: 51 087
+time:  ms --> 1 311 046 ms
+time zonder initiele opl.:  ms --> 1 310 412 ms
