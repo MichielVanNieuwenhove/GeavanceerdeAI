@@ -1,18 +1,20 @@
 import java.util.List;
 
 public class MasterProblemSolution {
-    private List<Boolean>[] lambda;
+    private List<Double>[] lambda;
     private double[] v;
     private double[][] w;
+    private double solutionValue;
 
-    MasterProblemSolution(List<Boolean>[] lambda, double[] v, double[][] w) {
+    MasterProblemSolution(List<Double>[] lambda, double[] v, double[][] w, double sol) {
         this.lambda = lambda;
         this.v = v;
         this.w = w;
+        solutionValue = sol;
     }
 
 
-    public List<Boolean>[] getLambda() {
+    public List<Double>[] getLambda() {
         return lambda;
     }
 
@@ -22,5 +24,9 @@ public class MasterProblemSolution {
 
     public double[][] getW() {
         return w;
+    }
+
+    public double getSolutionValue() {
+        return solutionValue;
     }
 }
