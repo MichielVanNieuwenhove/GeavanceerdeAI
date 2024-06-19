@@ -3,15 +3,10 @@ import gurobi.*;
 import java.util.List;
 
 public class Main {
-<<<<<<< Updated upstream
-    private final static String inputFilename = "Instances/umps12.txt";
-    public static final int q1 = 7;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
-=======
-    private final static String inputFilename = "Instances/umps10C.txt";
-    public static final int q1 = 5;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
->>>>>>> Stashed changes
-    public static final int q2 = 2;  //An umpire crew must wait q2-1 rounds before officiating the same team again {0-floor(nUmpires/2)}
-    public static boolean multithreaded = false;
+    private final static String inputFilename = "Instances/umps6.txt";
+    public static final int q1 = 3;  //An umpire crew must wait q1-1 rounds before revisiting a team's home {0-nUmpires}
+    public static final int q2 = 1;  //An umpire crew must wait q2-1 rounds before officiating the same team again {0-floor(nUmpires/2)}
+    public static boolean multithreaded = true;
 
     public static void main(String[] args) throws GRBException, InterruptedException {
         InputManager inputManager = new InputManager();
